@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9442891E1DD0FF1800DD61A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9442891D1DD0FF1800DD61A9 /* AppDelegate.swift */; };
-		944289201DD0FF1800DD61A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9442891F1DD0FF1800DD61A9 /* ViewController.swift */; };
+		944289201DD0FF1800DD61A9 /* FirendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9442891F1DD0FF1800DD61A9 /* FirendsController.swift */; };
 		944289231DD0FF1800DD61A9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 944289211DD0FF1800DD61A9 /* Main.storyboard */; };
 		944289261DD0FF1800DD61A9 /* A_fbMessenger_clone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 944289241DD0FF1800DD61A9 /* A_fbMessenger_clone.xcdatamodeld */; };
 		944289281DD0FF1800DD61A9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 944289271DD0FF1800DD61A9 /* Assets.xcassets */; };
@@ -40,7 +40,7 @@
 /* Begin PBXFileReference section */
 		9442891A1DD0FF1800DD61A9 /* A-fbMessenger-clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "A-fbMessenger-clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9442891D1DD0FF1800DD61A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9442891F1DD0FF1800DD61A9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9442891F1DD0FF1800DD61A9 /* FirendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirendsController.swift; sourceTree = "<group>"; };
 		944289221DD0FF1800DD61A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		944289251DD0FF1800DD61A9 /* A_fbMessenger_clone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = A_fbMessenger_clone.xcdatamodel; sourceTree = "<group>"; };
 		944289271DD0FF1800DD61A9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				9442891D1DD0FF1800DD61A9 /* AppDelegate.swift */,
-				9442891F1DD0FF1800DD61A9 /* ViewController.swift */,
+				9442891F1DD0FF1800DD61A9 /* FirendsController.swift */,
 				944289211DD0FF1800DD61A9 /* Main.storyboard */,
 				944289271DD0FF1800DD61A9 /* Assets.xcassets */,
 				944289291DD0FF1800DD61A9 /* LaunchScreen.storyboard */,
@@ -275,7 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94763B881DD2516900653F91 /* ChatLogController.swift in Sources */,
-				944289201DD0FF1800DD61A9 /* ViewController.swift in Sources */,
+				944289201DD0FF1800DD61A9 /* FirendsController.swift in Sources */,
 				94763B8A1DD2648200653F91 /* CustomTabBarController.swift in Sources */,
 				9442894F1DD1004E00DD61A9 /* FriendsControllerHelper.swift in Sources */,
 				9442891E1DD0FF1800DD61A9 /* AppDelegate.swift in Sources */,

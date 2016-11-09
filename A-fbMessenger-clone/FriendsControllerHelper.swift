@@ -18,7 +18,7 @@ extension FriendsController{
         let context = getContext()
             
            
-        createMarkMessage()
+        //createMarkMessage()
         createSteveMessage()
         
         
@@ -47,7 +47,6 @@ extension FriendsController{
             
         }
         
-        loadData()
     }
     
     fileprivate func createSteveMessage(){
@@ -69,24 +68,7 @@ extension FriendsController{
         FriendsController.createMessageWithText(text: "Absolutely, i will just use my gigantic iPhone 6 Plus until then!!!", friend: steve, minuteAgo: 1, context: getContext(), isSender: true)
     }
     
-    fileprivate func createMarkMessage(){
-        
-        let mark = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: getContext()) as! Friend
-        mark.name = "Mark Zuckerberg"
-        mark.profileImageName = "zuckprofile"
-        
-        FriendsController.createMessageWithText(text: "Good morning..", friend: mark, minuteAgo: 3, context: getContext())
-        
-        FriendsController.createMessageWithText(text: "Hello, how are you, hope you are having a good morning!?", friend: mark, minuteAgo: 2, context: getContext())
-        
-        FriendsController.createMessageWithText(text: "Are you interested in buying an Apple device? We have a variety of Apple devices that sooths your need.", friend: mark, minuteAgo: 1, context: getContext())
-        
-        FriendsController.createMessageWithText(text: "Yes, totally looking to buy an iPhone 7.", friend: mark, minuteAgo: 1, context: getContext(), isSender: true)
-        
-        FriendsController.createMessageWithText(text: "Totally understand that you want the new iPhone 7, but you have to wait till September for the new release. Sorry that's how Apple like to do things.", friend: mark, minuteAgo: 1, context: getContext())
-        
-        FriendsController.createMessageWithText(text: "Absolutely, i will just use my gigantic iPhone 6 Plus until then!!!", friend: mark, minuteAgo: 1, context: getContext(), isSender: true)
-    }
+    
     
     static func createMessageWithText(text: String, friend: Friend, minuteAgo: Double,
                                            context: NSManagedObjectContext, isSender: Bool = false){
@@ -95,44 +77,45 @@ extension FriendsController{
         message.text = text
         message.date = NSDate().addingTimeInterval(-minuteAgo * 60)
         message.isSender = NSNumber(value: isSender) as Bool
+        friend.lastMessage = message
 
     }
     
-    func loadData(){
-        
-        messages = [Message]()
-        
-        if let friends = fetchFriends(){
-        
-            for friend in friends{
-            
-                let fetchRequest: NSFetchRequest<Message> = Message.fetchRequest()
-                fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-                fetchRequest.predicate = NSPredicate(format: "friend.name = %@", friend.name!)
-                fetchRequest.fetchLimit = 1
-                do{
-                
-                    let fetchMessages = try getContext().fetch(fetchRequest)
-                    messages?.append(contentsOf: fetchMessages)
-                }catch {
-                    print("Error with request: \(error)")
-                }
-            }
-            
-             messages?.sort(by: { $0.date?.compare($1.date as! Date) == .orderedDescending })
-        }
-    }
-    
-    fileprivate func fetchFriends() -> [Friend]? {
-        
-        let fetchRequest: NSFetchRequest<Friend> = Friend.fetchRequest()
-        do{
-            return try getContext().fetch(fetchRequest)
-        }catch {
-            print("Error with request: \(error)")
-        }
-        return nil
-    }
+//    func loadData(){
+//        
+//        messages = [Message]()
+//        
+//        if let friends = fetchFriends(){
+//        
+//            for friend in friends{
+//            
+//                let fetchRequest: NSFetchRequest<Message> = Message.fetchRequest()
+//                fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+//                fetchRequest.predicate = NSPredicate(format: "friend.name = %@", friend.name!)
+//                fetchRequest.fetchLimit = 1
+//                do{
+//                
+//                    let fetchMessages = try getContext().fetch(fetchRequest)
+//                    messages?.append(contentsOf: fetchMessages)
+//                }catch {
+//                    print("Error with request: \(error)")
+//                }
+//            }
+//            
+//             messages?.sort(by: { $0.date?.compare($1.date as! Date) == .orderedDescending })
+//        }
+//    }
+//    
+//    fileprivate func fetchFriends() -> [Friend]? {
+//        
+//        let fetchRequest: NSFetchRequest<Friend> = Friend.fetchRequest()
+//        do{
+//            return try getContext().fetch(fetchRequest)
+//        }catch {
+//            print("Error with request: \(error)")
+//        }
+//        return nil
+//    }
     
     func clearData(){
         do{

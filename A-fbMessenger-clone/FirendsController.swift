@@ -8,7 +8,7 @@
 
 import UIKit
 
-import UIKit
+import CoreData
 
 class BaseCell: UICollectionViewCell{
     
@@ -28,12 +28,47 @@ class BaseCell: UICollectionViewCell{
 }
 
 
-class FriendsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class FriendsController: UICollectionViewController,
+        UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     
     fileprivate let cellId = "cellId"
     
-    var messages: [Message]?
+    //var messages: [Message]?
     
+    lazy var fetchResltController: NSFetchedResultsController<Friend> = {
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Friend")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastMessage.date", ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "lastMessage != nil")
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: ChatLogController.getContext(), sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        return frc as! NSFetchedResultsController<Friend>
+    }()
+    
+    var blockOperations = [BlockOperation]()
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        if type == .insert{
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView?.insertItems(at: [newIndexPath!])
+            }))
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView?.performBatchUpdates({
+            
+            for operation in self.blockOperations{
+                operation.start()
+            }
+            
+        }, completion: { (completed) in
+            let lastItem = self.fetchResltController.sections![0].numberOfObjects - 1
+            let indexPath = NSIndexPath(item: lastItem, section: 0)
+            self.collectionView?.scrollToItem(at: indexPath as IndexPath, at: .bottom, animated: true)
+        })
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"
@@ -43,6 +78,31 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         collectionView?.register(MessageCell.self, forCellWithReuseIdentifier: cellId)
         
         setupData()
+        
+        do{
+            try fetchResltController.performFetch()
+        }catch let err{
+            print(err)
+        }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Mark", style: .plain, target: self, action: #selector(addMark))
+    }
+    
+    func addMark(){
+            
+            let mark = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: getContext()) as! Friend
+            mark.name = "Mark Zuckerberg"
+            mark.profileImageName = "zuckprofile"
+            
+            FriendsController.createMessageWithText(text: "Good morning..", friend: mark, minuteAgo: 3, context: getContext())
+        
+        
+        let bill = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: getContext()) as! Friend
+        bill.name = "Bill Gate"
+        bill.profileImageName = "bill_gates_profile"
+        
+            FriendsController.createMessageWithText(text: "Hello, how are you, hope you are having a good morning!?", friend: bill, minuteAgo: 2, context: getContext())
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,16 +112,19 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let count = messages?.count{
+        if let count = fetchResltController.sections?[section].numberOfObjects {
             return count
         }
+        
         return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MessageCell
         
-        if let message = messages?[indexPath.item]{
+        let friend = fetchResltController.object(at: indexPath)
+        
+        if let message = friend.lastMessage{
             cell.message = message
         }
         
@@ -77,7 +140,8 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let layout = UICollectionViewFlowLayout()
         let controller = ChatLogController(collectionViewLayout: layout)
-        controller.friend = messages?[indexPath.item].friend
+        let friend = fetchResltController.object(at: indexPath)
+        controller.friend = friend
         navigationController?.pushViewController(controller, animated: true)
     }
     
